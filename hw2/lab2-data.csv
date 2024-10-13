@@ -1,7 +1,7 @@
 ﻿Volume (mL),Time (s),Transport (mL/min),Pressure difference (mm),Qualatative Analysis,,difference between guages: 151cm
-0,,0,2,,,pipe diamer: 12mm
+0,,0,2,I mean the water isn't moving.,,pipe diamer: 12mm
 230,60,230,3,mostly laminar,,
 225,30,450,5,"some turbulence, diffuses quickly",,
 400,15,1600,15,much turbulence,,
-650,15,2600,20,,,
-700,10,4200,60,,,
+650,15,2600,20,much turbulence,,
+700,10,4200,60,much turbulence,,
