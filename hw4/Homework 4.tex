@@ -64,12 +64,24 @@ We have an unknown constant \(C\). This represents the total energy in the syste
 Yes. It has to be. I refuse to provide more evidence. Mark me down I dare you.
 
 \subsection{}
-I reject this question.
+Since \(\nabla^2 \vec u = - \text{curl}\ \omega\), and \(u_\theta = L/\rho r\):
+\begin{align*}
+\nabla^2 u_\theta &= \frac{1}{r} \diffp{}{r} \left(r \diffp{u_\theta}{r}\right) \\
+&= \frac{1}{r} \diffp{}{r}\left(r \frac{L}{\rho r}\right) \\
+&= \frac{1}{r} \diffp{}{r}\left(\frac{L}{\rho}\right) \\
+&= 0
+\end{align*}
+Implying \(\omega_z = 0\), which we expect, since the particles far from the vortex center are only revolving around the vortex axis, but not rotating themselves.
 
 \section{Boundary Layer Thickness in the Bathtub Vortex}
 
 \subsection{}
+Now, assuming the velocity is almost purely radial in the boundary layer,
+\[\rho \left(\diffp{u_r}{t} + u_r \diffp{u_r}{r} + \frac{u_\theta}{r} \diffp{u_r}{\theta} + u_z \diffp{u_r}{z} - \frac{u_\theta^2}{r}\right) = -\diffp{P}{r} + \rho g_r  + \mu\left(\nabla^2 u_r - \frac{u_r}{r^2} + \frac{2}{r^2}\diffp{u_r}{\theta}\right)\]
+With our simplifying assumptions, this becomes:
+\[\rho u_r \diffp{u_r}{r} = - \diffp{P}{r} + \mu \left(\nabla^2 u_r - \frac{u_r}{r^2}\right)\]
 \subsection{}
+I have literally no idea what to do after that.
 \subsection{}
 \subsection{}
 \subsection{}
