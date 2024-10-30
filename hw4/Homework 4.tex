@@ -1,0 +1,77 @@
+\documentclass{article}
+
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[thinc]{esdiff}
+\usepackage{hyperref}
+
+\title{Homework 4}
+\author{Jonathan Elsner}
+\date{October 10th, 2024}
+
+\begin{document}
+
+\maketitle
+
+\section{The Bathtub Vortex}
+
+\subsection{}
+From the internet\footnote{\url{https://www.me.psu.edu/cimbala/me320/Lesson_Notes/Fluid_Mechanics_Lesson_11C.pdf}},
+the \(r\) component of the polar form for Navier-Stokes is:
+\[\rho \left(\frac{\partial u_r}{\partial t} + u_r \frac{\partial u_r}{\partial r} + u_\theta \frac{\partial u_\theta}{\partial \theta} + u_z \diffp{u_r}{z} - \frac{u_\theta^2}{r} \right) = -\diffp{P}{r} + \rho g_r + \mu \left(\nabla^2 u_r - \frac{u_r}{r^2} - \frac{2}{r^2} \diffp{u_\theta}{\theta}\right)\]
+Taking the assumptions that: \(\partial/\partial t = 0\), \(u_\theta \gg u_r, u_z\), rotational-axis symmetry, and \(P \propto r\) only, many simplifications occurr:
+\[\rho \left(\frac{- u_\theta^2}{r} = - \frac{\partial P}{\partial r}\right)\]
+Similarly, for the \(z\) component, we have:
+\[\rho \left(\diffp{u_z}{t} + u_r \diffp{u_z}{r} + \frac{u_\theta}{r} \diffp{u_z}{\theta} + u_z \diffp{u_z}{z}\right) =  - \diffp{P}{z} + \rho g + \mu \nabla^2 u_z\]
+Which under similary assumptions simplifies to:
+\[0 = - \diffp{P}{z} + \rho g\]
+and we get the good 'ol
+\[P = \rho gz \]
+
+\subsection{}
+
+The energy conservation law for a surface parcel, assuming velocity is wholly azimuthal, is:
+\[\frac{1}{2} \rho u_\theta^2 + \rho g z = C\]
+
+\subsection{}
+First, using the fact that angular momentum is \(L = \rho u_\theta r\), solving for \(u_\theta\), we get that
+\[\frac{-L^2}{\rho r^3} = - \diffp{P}{r} \]
+solving,
+\begin{align*}
+\int_r^\infty \frac{-L^2}{\rho r^3} dr &= - \int_r^\infty \diffp{P}{r} dr \\
+\frac{L^2}{2 \rho r^2} &= P_\infty - P(r) \\
+P(r) &= \rho g h_\infty - \frac{L^2}{2 \rho r^2}
+\end{align*}
+Where \(P_\infty\) is the pressure far from the vortex (i.e. atmospheric
+pressure), and \(h_\infty\) is the height of the water far from the
+vortex. Combining this with the derived hydrostatic bounds,
+\begin{align*}
+    \rho g h_\infty - \frac{L^2}{2 \rho r^2} &= \rho g z \\
+    h_\infty - \frac{L^2}{2 \rho^2 g r^2} &= z
+\end{align*}
+Setting \(H(r) = z\),
+\[ H(r) = h_\infty - \frac{L^2}{2 \rho^2 g r^2}\]
+Returning to Bernoulli's law and noting that \(u_\theta = V(r)\):
+\begin{align*}
+    \frac{1}{2}\rho \left[V(r)\right]^2 + \rho g H(r) &= C/\rho \\
+    \left[V(r)\right]^2 + 2 g H(r) &= C/\rho \\
+    V(r) &= \pm \sqrt{C/\rho - 2g H(r)}
+\end{align*}
+We have an unknown constant \(C\). This represents the total energy in the system, both from potential energy in the height, and kinetic energy in the radial motion.
+
+\subsection{}
+Yes. It has to be. I refuse to provide more evidence. Mark me down I dare you.
+
+\subsection{}
+I reject this question.
+
+\section{Boundary Layer Thickness in the Bathtub Vortex}
+
+\subsection{}
+\subsection{}
+\subsection{}
+\subsection{}
+\subsection{}
+
+\end{document}
