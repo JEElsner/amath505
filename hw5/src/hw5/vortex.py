@@ -16,6 +16,9 @@ class VortexManager:
         self.circulations = np.nan * np.ones(default_size, dtype=float)
         self.core_radii = np.zeros(default_size, dtype=float)
         self.end = 0
+
+    def add(self, x: float, y: float, circulation: float, core_radius=1, name="") -> Vortex:
+        return Vortex(x, y, circulation, core_radius, name, manager=self)
         
     def ensure_space(self):
         if self.end == self.positions.shape[1]:
@@ -35,11 +38,11 @@ class VortexManager:
         return self.end - 1
     
     @property
-    def non_nan_positions() -> NDArray[np.float64]:
-        return Vortex.positions[:, ~np.isnan(Vortex.circulations)]
+    def non_nan_positions(self) -> NDArray[np.float64]:
+        return self.positions[:, ~np.isnan(self.circulations)]
     
-    def plot_positions(ax, *args, **kwargs):
-        return ax.scatter(*Vortex.non_nan_positions(), *args, **kwargs)
+    def plot_positions(self, ax, *args, **kwargs):
+        return ax.scatter(*self.non_nan_positions, *args, **kwargs)
 
 DEFAULT_VORTEX_MANAGER = VortexManager()
 
