@@ -33,6 +33,10 @@ def test_tangential_vel():
     vels = circulation / (radii * 2 * np.pi)
     assert_almost_equal(vels, v1.tangential_vel(radii))
     
+    # Need to vectorize this because otherwise we just get a divide-by-zero error
+    radius = np.zeros(1)
+    assert v1.tangential_vel(radius)[0] == 0
+    
 def test_cartesian_velocity():
     v1 = Vortex(0, 0, 1, 1)
     vel = v1.velocity_from_vortex(1, 0)
