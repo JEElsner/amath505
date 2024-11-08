@@ -3,6 +3,7 @@ import numpy as np
 from numpy.testing import assert_array_equal, assert_almost_equal
 
 from hw5 import Vortex
+from hw5.vortex import DEFAULT_SIZE
 
 def test_add_vortex():
     v1 = Vortex(1, 2, 3)
@@ -50,5 +51,10 @@ def test_cartesian_velocity():
     assert_almost_equal(np.vstack((-ys, xs)), res)
     
 def test_positions_vector():
-    assert Vortex.positions_vector().shape == (2, 10)
+    assert Vortex.positions.shape == (2, 10)
+    
+def test_ensure_space():
+    lst = [Vortex(i, i, i) for i in range(DEFAULT_SIZE + 1)]
+
+    assert Vortex.positions.shape == (2, 2*DEFAULT_SIZE)
 

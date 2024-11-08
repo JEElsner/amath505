@@ -1,37 +1,33 @@
 import numpy as np
+from numpy.typing import ArrayLike, NDArray
 
 DEFAULT_SIZE = 10
 
 class Vortex:
     """Simple model of a Rankine Vortex.
     """
-
-    # This is called a flyweight pattern, right?
-    xs = np.zeros(DEFAULT_SIZE, dtype=float)
-    ys = np.zeros(DEFAULT_SIZE, dtype=float)
+    
+    # rows are coordinate axes, columns are coordinate pairs
+    positions = np.zeros((2, DEFAULT_SIZE), dtype=float)
     circulations = np.zeros(DEFAULT_SIZE, dtype=float)
     core_radii = np.zeros(DEFAULT_SIZE, dtype=float)
     end = 0
-    
-    @staticmethod
-    def positions_vector():
-        return np.vstack((Vortex.xs, Vortex.ys))
 
-    def __init__(self, x: float, y: float, circulation: float, core_radius: float=1):
+    def __init__(self, x: float, y: float, circulation: float, core_radius: float=1, name=""):
         # Ensure there is enough room in the arrays
-        if Vortex.end == len(Vortex.xs):
-            Vortex.xs = np.concat(Vortex.xs, np.zeros(len(Vortex.xs)))
-            Vortex.ys = np.concat(Vortex.ys, np.zeros(len(Vortex.ys)))
-            Vortex.circulations = np.concat(Vortex.circulations, np.zeros(len(Vortex.circulations)))
-            Vortex.core_radii = np.concat(Vortex.core_radii, np.zeros_like(Vortex.core_radii))
+        if Vortex.end == Vortex.positions.shape[1]:
+            Vortex.positions = np.concat((Vortex.positions, np.zeros_like(Vortex.positions)), axis=1)
+            Vortex.circulations = np.concat((Vortex.circulations, np.zeros(len(Vortex.circulations))))
+            Vortex.core_radii = np.concat((Vortex.core_radii, np.zeros_like(Vortex.core_radii)))
 
         self._i = Vortex.end
         Vortex.end += 1
         
-        Vortex.xs[self._i] = x
-        Vortex.ys[self._i] = y
+        Vortex.positions[:, self._i] = [x, y]
         Vortex.circulations[self._i] = circulation
         Vortex.core_radii[self._i] = core_radius
+
+        self.name = name
 
     def tangential_vel(self, r):
         # TODO: I think we need to change np.sign(vorticity) to something useful once we actually calculate vorticity
@@ -52,19 +48,23 @@ class Vortex:
         
     @property
     def x(self) -> float:
-        return Vortex.xs[self._i]
+        return Vortex.positions[0, self._i]
     
     @x.setter
     def x(self, val: float):
-        Vortex.xs[self._i] = val
+        Vortex.positions[0, self._i] = val
         
     @property
     def y(self) -> float:
-        return Vortex.ys[self._i]
+        return Vortex.positions[1, self._i]
     
     @y.setter
     def y(self, val: float) -> float:
-        Vortex.ys[self._i] = val
+        Vortex.positions[1, self._i] = val
+        
+    @property
+    def position(self) -> NDArray[np.float64]:
+        return Vortex.positions[:, self._i]
         
     @property
     def circulation(self) -> float:
