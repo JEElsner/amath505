@@ -1,39 +1,64 @@
+from __future__ import annotations
+
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
-DEFAULT_SIZE = 1
+class VortexManager:
+    def __init__(self, default_size=1, max_deleted=10):
+        self.default_size = default_size
+        self.max_deleted = max_deleted
+        self.deleted = set()
+        
+        self.index_mapping = dict()
+
+        # rows are coordinate axes, columns are coordinate pairs
+        self.positions = np.zeros((2, default_size), dtype=float)
+        self.circulations = np.nan * np.ones(default_size, dtype=float)
+        self.core_radii = np.zeros(default_size, dtype=float)
+        self.end = 0
+        
+    def ensure_space(self):
+        if self.end == self.positions.shape[1]:
+            self.positions = np.concat((self.positions, np.zeros_like(self.positions)), axis=1)
+            self.circulations = np.concat((self.circulations, np.nan * np.ones(len(self.circulations))))
+            self.core_radii = np.concat((self.core_radii, np.zeros_like(self.core_radii)))
+            
+    def register(self, vortex: Vortex) -> int:
+        # Ensure there is enough room in the arrays
+        self.ensure_space()
+        
+        # Add to index mapping registry
+        self.index_mapping[self.end] = vortex
+
+        # This is kinda goofy: add 1 and then subtract it
+        self.end += 1
+        return self.end - 1
+    
+    @property
+    def non_nan_positions() -> NDArray[np.float64]:
+        return Vortex.positions[:, ~np.isnan(Vortex.circulations)]
+    
+    def plot_positions(ax, *args, **kwargs):
+        return ax.scatter(*Vortex.non_nan_positions(), *args, **kwargs)
+
+DEFAULT_VORTEX_MANAGER = VortexManager()
 
 class Vortex:
     """Simple model of a Rankine Vortex.
     """
-    
-    # rows are coordinate axes, columns are coordinate pairs
-    positions = np.zeros((2, DEFAULT_SIZE), dtype=float)
-    circulations = np.nan * np.ones(DEFAULT_SIZE, dtype=float)
-    core_radii = np.zeros(DEFAULT_SIZE, dtype=float)
-    end = 0
-    
-    @staticmethod
-    def non_nan_positions() -> NDArray[np.float64]:
-        return Vortex.positions[:, ~np.isnan(Vortex.circulations)]
-    
-    @staticmethod
-    def plot_positions(ax, *args, **kwargs):
-        return ax.scatter(*Vortex.non_nan_positions(), *args, **kwargs)
 
-    def __init__(self, x: float, y: float, circulation: float, core_radius: float=1, name=""):
-        # Ensure there is enough room in the arrays
-        if Vortex.end == Vortex.positions.shape[1]:
-            Vortex.positions = np.concat((Vortex.positions, np.zeros_like(Vortex.positions)), axis=1)
-            Vortex.circulations = np.concat((Vortex.circulations, np.nan * np.ones(len(Vortex.circulations))))
-            Vortex.core_radii = np.concat((Vortex.core_radii, np.zeros_like(Vortex.core_radii)))
+    def __init__(self, x: float, y: float, circulation: float, core_radius: float=1, name="", manager=None):
+        if manager is None:
+            global DEFAULT_VORTEX_MANAGER
+            self.manager = DEFAULT_VORTEX_MANAGER
+        else:
+            self.manager = manager
 
-        self._i = Vortex.end
-        Vortex.end += 1
+        self._i = manager.register(self)
         
-        Vortex.positions[:, self._i] = [x, y]
-        Vortex.circulations[self._i] = circulation
-        Vortex.core_radii[self._i] = core_radius
+        manager.positions[:, self._i] = [x, y]
+        manager.circulations[self._i] = circulation
+        manager.core_radii[self._i] = core_radius
 
         self.name = name
 
@@ -56,40 +81,40 @@ class Vortex:
         
     @property
     def x(self) -> float:
-        return Vortex.positions[0, self._i]
+        return self.manager.positions[0, self._i]
     
     @x.setter
     def x(self, val: float):
-        Vortex.positions[0, self._i] = val
+        self.manager.positions[0, self._i] = val
         
     @property
     def y(self) -> float:
-        return Vortex.positions[1, self._i]
+        return self.manager.positions[1, self._i]
     
     @y.setter
     def y(self, val: float) -> float:
-        Vortex.positions[1, self._i] = val
+        self.manager.positions[1, self._i] = val
         
     @property
     def position(self) -> NDArray[np.float64]:
-        return Vortex.positions[:, self._i]
+        return self.manager.positions[:, self._i]
         
     @property
     def circulation(self) -> float:
-        return Vortex.circulations[self._i]
+        return self.manager.circulations[self._i]
     
     @circulation.setter
     def circulation(self, val: float):
-        Vortex.circulations[self._i] = val
+        self.manager.circulations[self._i] = val
         
     @property
     def core_radius(self) -> float:
-        return Vortex.core_radii[self._i]
+        return self.manager.core_radii[self._i]
     
     @core_radius.setter
     def core_radius(self, val: float):
-        Vortex.core_radii[self._i] = val
+        self.manager.core_radii[self._i] = val
 
     def __del__(self):
         # Really we should shift all the vortices down an index so that we don't infinitely expand memory, but that's a problem for later.
-        Vortex.circulations[self._i] = np.nan
+        self.manager.circulations[self._i] = np.nan

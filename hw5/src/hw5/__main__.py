@@ -12,12 +12,12 @@ rng = np.random.default_rng()
 fig, ax = plt.subplots(figsize=(20,12))
 
 
-# vortices = [Vortex(rng.random()*10, rng.random()*10, 5 * np.sign(rng.random() - 0.5)) for i in range(10)]
-vortices = [
-    Vortex(1, 1, 2),
-    Vortex(7, 7, 2),
-    # Vortex(1, 7, -2)
-]
+vortices = [Vortex(rng.random()*10, rng.random()*10, 5 * np.sign(rng.random() - 0.5)) for i in range(10)]
+# vortices = [
+#     Vortex(1, 1, 2),
+#     Vortex(7, 7, 2),
+#     # Vortex(1, 7, -2)
+# ]
 # vortices = [Vortex(7.7777777, 7.77777, 10)]
 
 x = np.linspace(0, 10, 50)

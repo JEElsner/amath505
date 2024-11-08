@@ -1,1 +1,1 @@
-from .vortex import Vortex
+from .vortex import Vortex, VortexManager
