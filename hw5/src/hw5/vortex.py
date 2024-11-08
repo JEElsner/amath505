@@ -14,14 +14,18 @@ class Vortex:
     end = 0
     
     @staticmethod
+    def non_nan_positions() -> NDArray[np.float64]:
+        return Vortex.positions[:, ~np.isnan(Vortex.circulations)]
+    
+    @staticmethod
     def plot_positions(ax, *args, **kwargs):
-        ax.scatter(*Vortex.positions, *args, **kwargs)
+        return ax.scatter(*Vortex.non_nan_positions(), *args, **kwargs)
 
     def __init__(self, x: float, y: float, circulation: float, core_radius: float=1, name=""):
         # Ensure there is enough room in the arrays
         if Vortex.end == Vortex.positions.shape[1]:
             Vortex.positions = np.concat((Vortex.positions, np.zeros_like(Vortex.positions)), axis=1)
-            Vortex.circulations = np.concat((Vortex.circulations, np.zeros(len(Vortex.circulations))))
+            Vortex.circulations = np.concat((Vortex.circulations, np.nan * np.ones(len(Vortex.circulations))))
             Vortex.core_radii = np.concat((Vortex.core_radii, np.zeros_like(Vortex.core_radii)))
 
         self._i = Vortex.end
