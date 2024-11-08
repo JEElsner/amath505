@@ -3,13 +3,15 @@ from __future__ import annotations
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
+from typing import Dict, Set
+
 class VortexManager:
     def __init__(self, default_size=1, max_deleted=10):
         self.default_size = default_size
         self.max_deleted = max_deleted
-        self.deleted = set()
+        self.deleted: Set[int] = set()
         
-        self.index_mapping = dict()
+        self.index_mapping: Dict[int, Vortex] = dict()
 
         # rows are coordinate axes, columns are coordinate pairs
         self.positions = np.zeros((2, default_size), dtype=float)
@@ -36,6 +38,26 @@ class VortexManager:
         # This is kinda goofy: add 1 and then subtract it
         self.end += 1
         return self.end - 1
+    
+    def deregister(self, vortex: Vortex | int) -> int:
+        if isinstance(vortex, int):
+            pass
+        else:
+            vortex = vortex._i
+
+        self.circulations[vortex] = np.nan
+        self.positions[:, vortex] = np.nan
+        self.core_radii[vortex] = np.nan
+        
+        del self.index_mapping[vortex]._i
+        del self.index_mapping[vortex]
+        self.deleted.add(vortex)
+
+        if len(self.deleted) > self.max_deleted:
+            self.minimize_space()
+
+    def minimize_space(self):
+        raise NotImplementedError()
     
     @property
     def non_nan_positions(self) -> NDArray[np.float64]:
@@ -117,7 +139,3 @@ class Vortex:
     @core_radius.setter
     def core_radius(self, val: float):
         self.manager.core_radii[self._i] = val
-
-    def __del__(self):
-        # Really we should shift all the vortices down an index so that we don't infinitely expand memory, but that's a problem for later.
-        self.manager.circulations[self._i] = np.nan
