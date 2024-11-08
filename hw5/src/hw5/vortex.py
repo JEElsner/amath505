@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
-DEFAULT_SIZE = 10
+DEFAULT_SIZE = 1
 
 class Vortex:
     """Simple model of a Rankine Vortex.
@@ -9,9 +9,13 @@ class Vortex:
     
     # rows are coordinate axes, columns are coordinate pairs
     positions = np.zeros((2, DEFAULT_SIZE), dtype=float)
-    circulations = np.zeros(DEFAULT_SIZE, dtype=float)
+    circulations = np.nan * np.ones(DEFAULT_SIZE, dtype=float)
     core_radii = np.zeros(DEFAULT_SIZE, dtype=float)
     end = 0
+    
+    @staticmethod
+    def plot_positions(ax, *args, **kwargs):
+        ax.scatter(*Vortex.positions, *args, **kwargs)
 
     def __init__(self, x: float, y: float, circulation: float, core_radius: float=1, name=""):
         # Ensure there is enough room in the arrays
@@ -84,4 +88,4 @@ class Vortex:
 
     def __del__(self):
         # Really we should shift all the vortices down an index so that we don't infinitely expand memory, but that's a problem for later.
-        Vortex.circulations[self._i] = 0
+        Vortex.circulations[self._i] = np.nan
