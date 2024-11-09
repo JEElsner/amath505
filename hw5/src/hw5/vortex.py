@@ -5,9 +5,21 @@ from numpy.typing import ArrayLike, NDArray
 
 from typing import Dict, Set
 
-def tangential_vel(r, circulation):
-    # TODO: may need to guard against the case where r = 0
-    return circulation / (r * 2 * np.pi)
+def tangential_vel(r, circulation, zero_cutoff=1e-10):
+    """Compute the tangential component of velocity away from a vortex
+    
+    Args:
+        r: The radius away from the vortex center
+        circulation: The circulation of the vortex
+        zero_cutoff: The tolerance under which to treat the radius as zero
+        
+    Returns:
+        The tangential component of velocity at a distance `r` from a vortex
+        with circulation `circulation`.
+    """
+    # TODO: I'm guessing this 'with' paradigm isn't very performant in loops
+    with np.errstate(divide='ignore'):
+        return np.where(r > 1e-10, circulation / (r * 2 * np.pi), 0)
 
 def velocity_from_vortex(vortex_x, vortex_y, circulation, x, y):
     """
@@ -28,11 +40,11 @@ def velocity_from_vortex(vortex_x, vortex_y, circulation, x, y):
     """
 
     # Vectorize everything!
-    vortex_x = np.array(vortex_x)
-    vortex_y = np.array(vortex_y)
-    circulation = np.array(circulation)
-    x = np.array(x)
-    y = np.array(y)
+    vortex_x = np.atleast_1d(np.array(vortex_x))
+    vortex_y = np.atleast_1d(np.array(vortex_y))
+    circulation = np.atleast_1d(np.array(circulation))
+    x = np.atleast_1d(np.array(x))
+    y = np.atleast_1d(np.array(y))
 
     # x - vortex_x: (m, N)
     x_dist = x - vortex_x[(...,) + (np.newaxis,) * x.ndim]
@@ -58,7 +70,7 @@ class VortexManager:
 
         # rows are coordinate axes, columns are coordinate pairs
         self.positions = np.zeros((2, default_size), dtype=float)
-        self.circulations = np.nan * np.ones(default_size, dtype=float)
+        self.circulations = 0 * np.ones(default_size, dtype=float)
         self.core_radii = np.zeros(default_size, dtype=float)
         self.end = 0
 
@@ -68,7 +80,7 @@ class VortexManager:
     def ensure_space(self):
         if self.end == self.positions.shape[1]:
             self.positions = np.concat((self.positions, np.zeros_like(self.positions)), axis=1)
-            self.circulations = np.concat((self.circulations, np.nan * np.ones(len(self.circulations))))
+            self.circulations = np.concat((self.circulations, 0 * np.ones(len(self.circulations))))
             self.core_radii = np.concat((self.core_radii, np.zeros_like(self.core_radii)))
             
     def register(self, vortex: Vortex) -> int:

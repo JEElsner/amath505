@@ -37,10 +37,10 @@ def test_tangential_vel(manager):
 def test_cartesian_velocity(manager):
     v1 = Vortex(0, 0, 1, 1, manager=manager)
     vel = v1.velocity_from_vortex(1, 0)
-    assert_almost_equal(np.array([0, 1]), vel / np.linalg.norm(vel))
+    assert_almost_equal(vel / np.linalg.norm(vel), np.array([[0], [1]]))
 
     vel = v1.velocity_from_vortex(0, 1)
-    assert_almost_equal(np.array([-1, 0]), vel / np.linalg.norm(vel))
+    assert_almost_equal(vel / np.linalg.norm(vel), np.array([[-1], [0]]))
 
     angles = np.linspace(0, 2 * np.pi, 100)
     xs = np.cos(angles)
@@ -49,7 +49,8 @@ def test_cartesian_velocity(manager):
     res = v1.velocity_from_vortex(xs, ys)
     assert res.shape == (2, 100)
     res /= np.linalg.norm(res, axis=0)
-    assert_almost_equal(np.vstack((-ys, xs)), res)
+    # direction of result should be xs ys rotated 90 degrees
+    assert_almost_equal(res, np.vstack((-ys, xs)))
 
 # @pytest.mark.skip(reason="Other tests expand the size of the array, so when this test is run by itself, it works, but as a whole it doesn't. To fix, we need to make a VortexManager class, but that's too much work right now.")   
 def test_positions_vector(manager):
@@ -64,13 +65,13 @@ def test_positions_vector(manager):
 def test_combined_velocity(manager: VortexManager):
     v1 = manager.add(-1, 0, 100)
 
-    assert manager.velocity_at(0, 0).shape == (2,)
+    assert manager.velocity_at(0, 0).shape == (2,1)
 
     v2 = manager.add(1, 0, 100)
     v3 = manager.add(0, 1, 100)
     v4 = manager.add(0, -1, 100)
 
-    assert_almost_equal(np.zeros((2,)), manager.velocity_at(0, 0))
+    assert_almost_equal(manager.velocity_at(0, 0), np.zeros((2,1)))
 
     x = np.linspace(0.1, 1, 100)
     y = np.linspace(0.1, 1, 100)
