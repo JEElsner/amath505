@@ -126,6 +126,14 @@ class VortexManager:
         # xs, ys = np.meshgrid(self.positions[0, :], self.positions[1, :])
         return velocity_from_vortex(*self.non_nan_positions, self.non_nan_circulations, x, y)
     
+    def advect(self, dt):
+        """Move all the vortices based on their interactions with each other
+        
+        Args:
+            dt: Timestep
+        """
+        self.positions += dt * self.velocity_at(*self.positions)
+    
     def plot_positions(self, ax, *args, **kwargs):
         return ax.scatter(*self.non_nan_positions, *args, **kwargs)
 
