@@ -26,11 +26,7 @@ y = np.linspace(0, 10, 50)
 
 xs, ys = np.meshgrid(x, y)
 
-# vel_field = manager.velocity_at(xs, ys)
-vel_field = np.zeros_like(xs, ys)
-for v in vortices:
-    vel_field += v.velocity_from_vortex(xs, ys)
-
+vel_field = manager.velocity_at(xs, ys)
 norms = np.linalg.norm(vel_field, axis=0)
 
 # vel_field /= np.exp(norms)

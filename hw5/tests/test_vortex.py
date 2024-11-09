@@ -64,13 +64,13 @@ def test_positions_vector(manager):
 def test_combined_velocity(manager: VortexManager):
     v1 = manager.add(-1, 0, 100)
 
-    assert manager.velocity_at(0, 0).shape == (2,1)
+    assert manager.velocity_at(0, 0).shape == (2,)
 
     v2 = manager.add(1, 0, 100)
     v3 = manager.add(0, 1, 100)
     v4 = manager.add(0, -1, 100)
 
-    assert_almost_equal(np.zeros((2,1)), manager.velocity_at(0, 0))
+    assert_almost_equal(np.zeros((2,)), manager.velocity_at(0, 0))
 
     x = np.linspace(0.1, 1, 100)
     y = np.linspace(0.1, 1, 100)
@@ -78,6 +78,6 @@ def test_combined_velocity(manager: VortexManager):
 
     y = np.linspace(0.1, 1, 50)
     xs, ys = np.meshgrid(x, y)
-    assert manager.velocity_at(xs, ys).shape == (2, 100, 50)
+    assert manager.velocity_at(xs, ys).shape == (2, 50, 100)
     
 

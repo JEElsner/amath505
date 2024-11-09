@@ -10,17 +10,42 @@ def tangential_vel(r, circulation):
     return circulation / (r * 2 * np.pi)
 
 def velocity_from_vortex(vortex_x, vortex_y, circulation, x, y):
+    """
+    Below: m is a scalar natural number, N is a (possibly) shape tuple, or a
+    scalar.
+
+    Args:
+        vortex_x: (m,) x coordinates of vortices
+        vortex_y: (m,) y coordinates of vortices
+        circulation: (m,) circulations
+        x: (N,) x points
+        y: (N,) y points
+
+    Returns:
+        (2, N) matrix of velocities. In 2D, the first row is the x-coordinate,
+        and the second row is the y-coordinate. If N is a shape tuple, then the
+        first array contains the x-coordinates and the second the y-coordinates.
+    """
+
     # Vectorize everything!
-    vortex_x = np.array(vortex_x)[:, np.newaxis]
-    vortex_y = np.array(vortex_y)[:, np.newaxis]
-    circulation = np.array(circulation)[:, np.newaxis]
+    vortex_x = np.array(vortex_x)
+    vortex_y = np.array(vortex_y)
+    circulation = np.array(circulation)
     x = np.array(x)
     y = np.array(y)
 
-    distance = np.sqrt((x - vortex_x)**2 + (y - vortex_y)**2)
-    speed = tangential_vel(distance, circulation)
+    # x - vortex_x: (m, N)
+    x_dist = x - vortex_x[(...,) + (np.newaxis,) * x.ndim]
+    # y - vortex_y: (m, N)
+    y_dist = y - vortex_y[(...,) + (np.newaxis,) * y.ndim]
 
-    angle = np.pi/2 + np.arctan2(y - vortex_y, x - vortex_x)
+    # (m, N) -> (m, N)
+    distance = np.sqrt(x_dist**2 + y_dist**2)
+    # dist: (m, N); circ: (m,) -> vel: (m, N)
+    speed = tangential_vel(distance, circulation[(...,) + (np.newaxis,) * x.ndim])
+    # (m, N) -> (m, N)
+    angle = np.pi/2 + np.arctan2(y_dist, x_dist)
+    # speed: (m, N); angle: (m, N) -cos/sin-> (2, m, N) -sum-> (2, N)
     return np.sum(speed * np.array([np.cos(angle), np.sin(angle)]) / np.sqrt(2), axis=1)
 
 class VortexManager:
@@ -81,9 +106,13 @@ class VortexManager:
     def non_nan_positions(self) -> NDArray[np.float64]:
         return self.positions[:, ~np.isnan(self.circulations)]
     
+    @property
+    def non_nan_circulations(self) -> NDArray[np.float64]:
+        return self.circulations[~np.isnan(self.circulations)]
+    
     def velocity_at(self, x: ArrayLike[np.float64], y: ArrayLike[np.float64]):
         # xs, ys = np.meshgrid(self.positions[0, :], self.positions[1, :])
-        return velocity_from_vortex(*self.positions, self.circulations, x, y)
+        return velocity_from_vortex(*self.non_nan_positions, self.non_nan_circulations, x, y)
     
     def plot_positions(self, ax, *args, **kwargs):
         return ax.scatter(*self.non_nan_positions, *args, **kwargs)
