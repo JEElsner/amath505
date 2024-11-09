@@ -25,20 +25,14 @@ def test_tangential_vel(manager):
     # See https://en.wikipedia.org/wiki/Rankine_vortex
     circulation = 10
     v1 = Vortex(0, 0, circulation, core_radius=1, manager=manager)
-
-    radius = 0.5
-    assert v1.tangential_vel(radius) == radius * circulation / (2 * np.pi)
-
-    radius = 2
-    assert v1.tangential_vel(radius) == circulation / (radius * 2 * np.pi)
     
-    radii = np.arange(2,  12)
+    radii = np.linspace(0.1, 10, 100)
     vels = circulation / (radii * 2 * np.pi)
     assert_almost_equal(vels, v1.tangential_vel(radii))
     
     # Need to vectorize this because otherwise we just get a divide-by-zero error
     radius = np.zeros(1)
-    assert v1.tangential_vel(radius)[0] == 0
+    assert v1.tangential_vel(radius)[0] == np.inf
     
 def test_cartesian_velocity(manager):
     v1 = Vortex(0, 0, 1, 1, manager=manager)
@@ -65,4 +59,25 @@ def test_positions_vector(manager):
     lst = [Vortex(i, i, i, manager=manager) for i in range(manager.default_size + 1)]
 
     assert manager.positions.shape == (2, 2*manager.default_size)
+
+
+def test_combined_velocity(manager: VortexManager):
+    v1 = manager.add(-1, 0, 100)
+
+    assert manager.velocity_at(0, 0).shape == (2,1)
+
+    v2 = manager.add(1, 0, 100)
+    v3 = manager.add(0, 1, 100)
+    v4 = manager.add(0, -1, 100)
+
+    assert_almost_equal(np.zeros((2,1)), manager.velocity_at(0, 0))
+
+    x = np.linspace(0.1, 1, 100)
+    y = np.linspace(0.1, 1, 100)
+    assert manager.velocity_at(x, y).shape == (2, 100)
+
+    y = np.linspace(0.1, 1, 50)
+    xs, ys = np.meshgrid(x, y)
+    assert manager.velocity_at(xs, ys).shape == (2, 100, 50)
+    
 

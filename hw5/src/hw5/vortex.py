@@ -5,6 +5,24 @@ from numpy.typing import ArrayLike, NDArray
 
 from typing import Dict, Set
 
+def tangential_vel(r, circulation):
+    # TODO: may need to guard against the case where r = 0
+    return circulation / (r * 2 * np.pi)
+
+def velocity_from_vortex(vortex_x, vortex_y, circulation, x, y):
+    # Vectorize everything!
+    vortex_x = np.array(vortex_x)[:, np.newaxis]
+    vortex_y = np.array(vortex_y)[:, np.newaxis]
+    circulation = np.array(circulation)[:, np.newaxis]
+    x = np.array(x)
+    y = np.array(y)
+
+    distance = np.sqrt((x - vortex_x)**2 + (y - vortex_y)**2)
+    speed = tangential_vel(distance, circulation)
+
+    angle = np.pi/2 + np.arctan2(y - vortex_y, x - vortex_x)
+    return np.sum(speed * np.array([np.cos(angle), np.sin(angle)]) / np.sqrt(2), axis=1)
+
 class VortexManager:
     def __init__(self, default_size=1, max_deleted=10):
         self.default_size = default_size
@@ -63,6 +81,10 @@ class VortexManager:
     def non_nan_positions(self) -> NDArray[np.float64]:
         return self.positions[:, ~np.isnan(self.circulations)]
     
+    def velocity_at(self, x: ArrayLike[np.float64], y: ArrayLike[np.float64]):
+        # xs, ys = np.meshgrid(self.positions[0, :], self.positions[1, :])
+        return velocity_from_vortex(*self.positions, self.circulations, x, y)
+    
     def plot_positions(self, ax, *args, **kwargs):
         return ax.scatter(*self.non_nan_positions, *args, **kwargs)
 
@@ -88,16 +110,11 @@ class Vortex:
         self.name = name
 
     def tangential_vel(self, r):
-        # TODO: I think we need to change np.sign(vorticity) to something useful once we actually calculate vorticity
         # TODO: may need to guard against the case where r = 0
-        return self.circulation * np.where(r <= self.core_radius, r * self.core_radius**2, 1/r) / (2 * np.pi)
+        return tangential_vel(r, self.circulation)
     
     def velocity_from_vortex(self, x, y):
-        distance = np.sqrt((x - self.x)**2 + (y - self.y)**2)
-        tangential_vel = self.tangential_vel(distance)
-
-        angle = np.pi/2 + np.arctan2(y - self.y, x - self.x)
-        return tangential_vel * np.array([np.cos(angle), np.sin(angle)]) / np.sqrt(2)
+        return velocity_from_vortex(self.x, self.y, self.circulation, x, y)
     
     @property
     def vorticity(self):

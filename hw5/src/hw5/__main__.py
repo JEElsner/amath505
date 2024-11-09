@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib import animation
+from matplotlib import animation, colors
 
 from . import Vortex, VortexManager
 
@@ -25,14 +25,22 @@ x = np.linspace(0, 10, 50)
 y = np.linspace(0, 10, 50)
 
 xs, ys = np.meshgrid(x, y)
-vel_field = np.zeros((2, len(x), len(y)))
 
+# vel_field = manager.velocity_at(xs, ys)
+vel_field = np.zeros_like(xs, ys)
 for v in vortices:
     vel_field += v.velocity_from_vortex(xs, ys)
 
-ax.quiver(xs, ys, *vel_field, angles='xy', scale_units='xy', units='xy', minshaft=2, pivot='mid')
+norms = np.linalg.norm(vel_field, axis=0)
+
+# vel_field /= np.exp(norms)
+vel_field /= norms
+# vel_field *= np.log(norms) / norms
+
+# ax.contourf(xs, ys, norms, norm=colors.LogNorm())
+ax.contourf(xs, ys, np.log(norms))
+ax.quiver(xs, ys, *vel_field, angles='xy', scale_units='xy', units='xy', minshaft=2, pivot='tail')
 manager.plot_positions(ax, color='r')
 
-print(manager.circulations)
 
 plt.show()
