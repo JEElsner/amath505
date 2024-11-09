@@ -44,9 +44,9 @@ def velocity_from_vortex(vortex_x, vortex_y, circulation, x, y):
     # dist: (m, N); circ: (m,) -> vel: (m, N)
     speed = tangential_vel(distance, circulation[(...,) + (np.newaxis,) * x.ndim])
     # (m, N) -> (m, N)
-    angle = np.pi/2 + np.arctan2(y_dist, x_dist)
+    angle = np.arctan2(y_dist, x_dist)
     # speed: (m, N); angle: (m, N) -cos/sin-> (2, m, N) -sum-> (2, N)
-    return np.sum(speed * np.array([np.cos(angle), np.sin(angle)]) / np.sqrt(2), axis=1)
+    return np.sum(speed * np.array([-np.sin(angle), np.cos(angle)]) / np.sqrt(2), axis=1)
 
 class VortexManager:
     def __init__(self, default_size=1, max_deleted=10):
