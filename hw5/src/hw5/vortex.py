@@ -176,11 +176,16 @@ class VortexManager:
         
         return mirror_manager
     
-    def velocity_at(self, x: ArrayLike[np.float64], y: ArrayLike[np.float64]):
+    def velocity_at(self, x: ArrayLike[np.float64], y: ArrayLike[np.float64], mirror_vortices=False):
         # xs, ys = np.meshgrid(self.positions[0, :], self.positions[1, :])
-        return velocity_from_vortex(*self.non_nan_positions, self.non_nan_circulations, x, y)
+        vel = velocity_from_vortex(*self.non_nan_positions, self.non_nan_circulations, x, y)
+        
+        if mirror_vortices:
+            vel += self.mirror_vortices().velocity_at(x, y)
+
+        return vel
     
-    def advect(self, dt, mirror_vortices=False):
+    def advect(self, dt, mirror_vortices=True):
         """Move all the vortices based on their interactions with each other
         
         Args:
@@ -190,6 +195,31 @@ class VortexManager:
         
         if mirror_vortices and self.boundaries is not None:
             self.positions += dt * self.mirror_vortices().velocity_at(*self.positions)
+            
+    def step_forward(self, dt, steps):
+        """Advect the vortices by a number of steps.
+
+        Args:
+            dt: The timestep to use for advection
+            steps: The number of times to step forward
+
+        Returns:
+            An `(n, 2, steps+1)` array of points, where `n` is the number of
+            points in the vortex manager. The second axis is x and y
+            coordinates, and the last axis is the time. This works well for
+            plotting, because you can iterate through the first dimension,
+            calling `plot(*point)` on the remaining dimensions, which results in
+            line plots of the positions of all the particles.
+        """
+        history = np.zeros((steps+1,) + self.positions.shape)
+        history[0, :] = self.positions
+
+        for i in range(1, steps+1):
+            self.advect(dt)
+            history[i, :] = self.positions
+            
+        # (times, 2, points) -> (points, 2, times)
+        return np.transpose(history, (2, 1, 0))
     
     def plot_positions(self, ax, *args, **kwargs):
         return ax.scatter(*self.non_nan_positions, *args, **kwargs)

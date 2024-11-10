@@ -2,6 +2,8 @@ import numpy as np
 
 from . import VortexManager, animate
 
+import matplotlib.pyplot as plt
+
 rng = np.random.default_rng()
 
 N = 3
