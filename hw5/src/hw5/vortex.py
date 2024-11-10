@@ -23,6 +23,9 @@ def tangential_vel(r, circulation, zero_cutoff=1e-10):
 
 def velocity_from_vortex(vortex_x, vortex_y, circulation, x, y):
     """
+    Calculate the velocity at a point given the position and circulation of a
+    vortex.
+
     Below: m is a scalar natural number, N is a (possibly) shape tuple, or a
     scalar.
 
@@ -140,7 +143,7 @@ class VortexManager:
 DEFAULT_VORTEX_MANAGER = VortexManager()
 
 class Vortex:
-    """Simple model of a Rankine Vortex.
+    """Simple model of a Point Vortex.
     """
 
     def __init__(self, x: float, y: float, circulation: float, core_radius: float=1, name="", manager=None):
@@ -159,7 +162,6 @@ class Vortex:
         self.name = name
 
     def tangential_vel(self, r):
-        # TODO: may need to guard against the case where r = 0
         return tangential_vel(r, self.circulation)
     
     def velocity_from_vortex(self, x, y):
