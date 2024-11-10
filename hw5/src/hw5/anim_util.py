@@ -34,9 +34,9 @@ def update(frame, dt, xs, ys, field, positions, manager: VortexManager):
     
     return dt, xs, ys, field, positions, manager
 
-def animate(manager, grid_x, grid_y, dt, save_loc=None, duration=None, **kwargs):
-    matplotlib.use('tkagg')
-    fig, ax = plt.subplots(figsize=(20,12))
+def animate(manager, grid_x, grid_y, dt, figsize=(6,6), save_loc=None, duration=None, **kwargs):
+    # matplotlib.use('tkagg')
+    fig, ax = plt.subplots(figsize=figsize)
 
     xs, ys = np.meshgrid(grid_x, grid_y)
 
@@ -62,7 +62,9 @@ def animate(manager, grid_x, grid_y, dt, save_loc=None, duration=None, **kwargs)
         **kwargs
     )
 
-    if save_loc is not None:
-        anim.save(save_loc)
-    else:
-        plt.show()
+    # if save_loc is not None:
+    #     anim.save(save_loc)
+    # else:
+    #     plt.show(block=True)
+    
+    return anim
