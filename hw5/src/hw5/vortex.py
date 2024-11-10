@@ -64,7 +64,7 @@ def velocity_from_vortex(vortex_x, vortex_y, circulation, x, y):
     return np.sum(speed * np.array([-np.sin(angle), np.cos(angle)]) / np.sqrt(2), axis=1)
 
 class VortexManager:
-    def __init__(self, default_size=1, max_deleted=10):
+    def __init__(self, default_size=1, max_deleted=10, boundaries=None):
         self.default_size = default_size
         self.max_deleted = max_deleted
         self.deleted: Set[int] = set()
@@ -76,6 +76,9 @@ class VortexManager:
         self.circulations = 0 * np.ones(default_size, dtype=float)
         self.core_radii = np.zeros(default_size, dtype=float)
         self.end = 0
+
+        # boundaries for mirror vortices
+        self.boundaries = boundaries
 
     def add(self, x: float, y: float, circulation: float, core_radius=1, name="") -> Vortex:
         return Vortex(x, y, circulation, core_radius, name, manager=self)
@@ -125,17 +128,68 @@ class VortexManager:
     def non_nan_circulations(self) -> NDArray[np.float64]:
         return self.circulations[~np.isnan(self.circulations)]
     
+    @staticmethod
+    def __reflection_matrix(angle: float) -> NDArray[np.float64]:
+        """2D Reflection matrix for reflection across axis with the given
+        angle.
+        """
+        return np.array([[np.cos(2*angle), np.sin(2*angle)],
+                         [np.sin(2*angle), -np.cos(2*angle)]])
+        
+    @staticmethod
+    def reflect_across(pts, axis, angle):
+        """Reflect points across an axis.
+
+        Args:
+            pts: (2, n) The points to reflect.
+            axis: (2, 1) A point on the axis of reflection
+            angle: The angle of the axis of reflection
+            
+        Returns:
+            A (2, n) array of reflected points.
+        """
+
+        reflection = VortexManager.__reflection_matrix(angle)
+        return reflection @ (pts - axis) + axis
+    
+    def mirror_vortices(self, recurse=1) -> VortexManager:
+        l_mirror = self.reflect_across(self.positions, np.vstack([self.boundaries['left'], 0]), np.pi/2)
+        r_mirror = self.reflect_across(self.positions, np.vstack([self.boundaries['right'], 0]), np.pi/2)
+        
+        b_mirror = self.reflect_across(self.positions, np.vstack([0, self.boundaries['bottom']]), 0)
+        t_mirror = self.reflect_across(self.positions, np.vstack([0, self.boundaries['top']]), 0)
+
+        mirrors = np.concat((l_mirror, r_mirror, b_mirror, t_mirror), axis=1)
+        circulations = -np.repeat(self.circulations, 4)
+        
+        # I'm kind of bastardizing my own code here. VortexManager isn't
+        # designed to be used like this
+        mirror_manager = VortexManager(boundaries=self.boundaries)
+        mirror_manager.positions = mirrors
+        mirror_manager.circulations = circulations
+        
+        if recurse > 0:
+            deeper = mirror_manager.mirror_vortices(recurse=recurse-1)
+
+            mirror_manager.positions = np.concat((mirrors, deeper.positions), axis=1)
+            mirror_manager.circulations = np.concat((circulations, deeper.circulations))
+        
+        return mirror_manager
+    
     def velocity_at(self, x: ArrayLike[np.float64], y: ArrayLike[np.float64]):
         # xs, ys = np.meshgrid(self.positions[0, :], self.positions[1, :])
         return velocity_from_vortex(*self.non_nan_positions, self.non_nan_circulations, x, y)
     
-    def advect(self, dt):
+    def advect(self, dt, mirror_vortices=False):
         """Move all the vortices based on their interactions with each other
         
         Args:
             dt: Timestep
         """
         self.positions += dt * self.velocity_at(*self.positions)
+        
+        if mirror_vortices and self.boundaries is not None:
+            self.positions += dt * self.mirror_vortices().velocity_at(*self.positions)
     
     def plot_positions(self, ax, *args, **kwargs):
         return ax.scatter(*self.non_nan_positions, *args, **kwargs)
