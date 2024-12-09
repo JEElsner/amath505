@@ -1,6 +1,13 @@
+# LaTeX goop
 **.pdf
 **.html
 **.out
 **.aux
 **_files
 **.log
+**.bbl
+**.blg
+**.dvi
+**.fdb_latexmk
+**.fls
+**.xdv

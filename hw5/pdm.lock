@@ -2,7 +2,7 @@
 # It is not intended for manual editing.
 
 [metadata]
-groups = ["default", "interactive", "test"]
+groups = ["default", "interactive", "sym", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
 content_hash = "sha256:1c246cebf3c767331a335cbc4b9ac1782acf5d5a6a9bcbe40b892c9952681ce8"
@@ -1193,7 +1193,7 @@ files = [
 
 [[package]]
 name = "notebook-as-pdf"
-version = "0.5.0"
+version = "0.4.0"
 requires_python = ">=3.7"
 summary = "Jupyter extension to export notebooks as PDFs"
 groups = ["interactive"]
@@ -1203,8 +1203,8 @@ dependencies = [
     "pyppeteer",
 ]
 files = [
-    {file = "notebook-as-pdf-0.5.0.tar.gz", hash = "sha256:c0d90c48d9f42f6dd4c16db5b7c54a6553ec8948a98539d7d06d54501b0fae85"},
-    {file = "notebook_as_pdf-0.5.0-py3-none-any.whl", hash = "sha256:ae0f6b7fb5c80970cf6a25cdba2d1630e7ced8546563bbaf2b46f7c24530b456"},
+    {file = "notebook-as-pdf-0.4.0.tar.gz", hash = "sha256:fd6181bdb3a8c5952d6bb4c2a4a7ace0ad1aa0b3079051014b6cce1936505341"},
+    {file = "notebook_as_pdf-0.4.0-py3-none-any.whl", hash = "sha256:360e09a16e5cc022178d7200290688961fe0fef41d4fa1c9c8887de462316e63"},
 ]
 
 [[package]]
