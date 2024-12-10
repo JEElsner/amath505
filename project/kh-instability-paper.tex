@@ -3,6 +3,10 @@
 \usepackage{fullpage}
 \usepackage{amsmath}
 \usepackage{cite}
+\usepackage{hyperref}
+\usepackage{graphicx}
+
+\graphicspath{{./res/}}
 
 \title{Kelvin-Helmoltz Instability}
 \author{Jonathan Elsner}
@@ -19,11 +23,14 @@ Kelvin-Helmholtz (KH) instability is a process that occurs at the interface
 between two fluids of two differing densities, creating vortex waves. KH
 Instability is a commonly occurring process in nature: it is one of the driving
 forces of mixing in the ocean \cite{woods-1968} and can sometimes be seen in
-cloud formations \cite{ludlam-1967} \cite{fluctus-clouds}. It is also thought to
+cloud formations \cite{ludlam-1967}. It is also thought to
 be a factor in heating the corona of the Sun \cite{nasa-solar-surfer}.
 
-
-%picture?
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=4in]{kh-instability-clouds-2.jpg}
+    \caption{Rare fluctus clouds are caused by KH Instability \cite{ludlam-1967}. Photo: \cite{fluctus-clouds}.}
+\end{figure}
 
 The key characteristic of KH instability is the distance between the waves at
 the interface. This changes over time and is dependent on both the difference in
