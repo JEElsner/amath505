@@ -120,41 +120,34 @@ from a reference frame tracking the rotation of the channel.
     \caption{Schematic of the Tank. Coordinates were rotated by $-\theta$ so that the coordinate axes are parallel and perpendicular to the bottom of the channel.}
     \label{img:tank-schematic}
 \end{figure}
-Tracking the height
-over time gives us the flow rate of the liquid, which we can divide by the cross
-section of the channel to find the fluid velocity. The velocity varies over
-time, so we chose to average the velocity during the time after the channel was
-tilted, but before the instability started.
-
-Using the density and fluid velocity, we can compute the Richardson number
-
-\[ \text{Ri} = \frac{g}{\rho} \frac{\Delta \rho}{\Delta U} \]
-
-where \(g\) is acceleration due to gravity and \(\rho\) is the density of one fluid, which we set to the density of fresh water (1000 kg/m\textsuperscript{2}) for this analysis.
+Tracking the height over time gives us the flow rate of the liquid, which we can
+divide by the cross section of the channel to find the fluid velocity. The
+velocity varies over time, so we chose to average the velocity during the time
+after the channel was tilted, but before the instability started. We then used
+this data to compute the Richardson Number.
 
 \begin{table}[h!]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|}
     \hline
     \textbf{Salinity (\%)} & $\bm{\Delta \rho}$ \textbf{(kg/m\textsuperscript{3})} & $\bm{\Delta U}$ \textbf{(m/s)}& \textbf{Ri} & $\bm{k}$ \textbf{(1/m)}& $\bm{\lambda}$ \textbf{(m)}\\ \hline
-    3.5 & 24.640773 & 0.07 & 48.096414 & 43.744532 & 0.02286 \\ \hline
-    9.5 & 70.584422 & 0.10 & 64.612124 & 56.242970 & 0.01778 \\ \hline
-    15.0 & 112.699310 & 0.12 & 68.929800 & 65.616798 & 0.01524 \\ \hline
+    3.5 & 0.636796 & 0.07 & 0.243153 & 43.744532 & 0.022860 \\
+    9.5 & 1.089990 & 0.10 & 0.203845 & 56.242970 & 0.017780 \\
+    15.0 & 1.504392 & 0.12 & 0.195297 & 65.616798 & 0.015240 \\
+    \hline
     \end{tabular}
     \caption{Summary of collected and derived data from the lab.}
     \label{tab:data}
 \end{table}
 
-In Figure \ref{graph:Ri-vs-k} we plot the relationship between Ri and \(k\).
+In Figure \ref{graph:Ri-vs-k} we plot the relationship between Ri and \(k\). We observe that \(\text{Ri} < 1/4\) for all trials, and that as the Richardson Number increases, the observed wave number decreases non-linearly.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=5in]{RivsK.png}
-    \caption{Wave number $k$ as a function of Ri. Admittedly, with three data points, it is hard to identify any kind of dependence.}
+    \caption{Wave number $k$ as a function of Ri.}
     \label{graph:Ri-vs-k}
 \end{figure}
-
-For Ri \(< 1/4\), we expect the system to remain 
 
 \section{Future Work}
 
