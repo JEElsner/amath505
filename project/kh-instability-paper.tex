@@ -65,7 +65,11 @@ due to velocity. From Kundu \cite{kundu}, it is defined as:
 
 \[ \text{Ri} = \frac{N^2}{(dU/dz)^2} \quad\text{with}\quad N^2 = \frac{-g}{\rho_0} \diff{\rho}{z} \]
 
-where \(\rho_0\) is a reference pressure. This formulation accounts for the continuous case where density and velocity change continuously; simplifying and formulating for the discrete case where velocity and density change suddenly across the interface (i.e. \(dU/dz = \Delta U / \Delta z\) and the same for \(\rho\)):
+where \(\rho_0\) is a reference pressure. This formulation accounts for the
+continuous case where density and velocity change continuously; simplifying and
+formulating for the discrete case where velocity and density change suddenly
+across the interface (i.e. \(dU/dz = \Delta U / \Delta z\) and the same for
+\(\rho\)):
 
 \[ \text{Ri} = \frac{-g}{\rho_0} \frac{\Delta \rho / \Delta z}{(\Delta U / \Delta z)^2} = \frac{-g}{\rho_0} \frac{\Delta \rho \Delta z}{\Delta U}\]
 
@@ -100,6 +104,9 @@ We used a tank that is 2.834 meters long, 0.1905 meters tall, and 0.054 meters
 wide.
 
 \section{Results and Analysis}
+
+We calculated the density of the saltwater using GSW-Python, an implementation of the Thermondynamic Equation of Seawater, assuming that the temperature was \(23^\circ\) C.
+
 
 Velocity data was not readily available from the videos of each run, so we
 derived the velocity of each half of the tank using data on the height of the
@@ -140,7 +147,9 @@ this data to compute the Richardson Number.
     \label{tab:data}
 \end{table}
 
-In Figure \ref{graph:Ri-vs-k} we plot the relationship between Ri and \(k\). We observe that \(\text{Ri} < 1/4\) for all trials, and that as the Richardson Number increases, the observed wave number decreases non-linearly.
+In Figure \ref{graph:Ri-vs-k} we plot the relationship between Ri and \(k\). We
+observe that \(\text{Ri} < 1/4\) for all trials, and that as the Richardson
+Number increases, the observed wave number decreases non-linearly.
 
 \begin{figure}[h!]
     \centering
