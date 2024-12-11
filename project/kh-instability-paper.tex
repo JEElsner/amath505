@@ -35,6 +35,7 @@ also thought to be a factor in heating the corona of the Sun
     \centering
     \includegraphics[width=4in]{kh-instability-clouds-2.jpg}
     \caption{Rare fluctus clouds are caused by KH Instability \cite{ludlam-1967}. Photo: \cite{fluctus-clouds}.}
+    \label{img:fluctus-clouds}
 \end{figure}
 
 The key characteristic of KH instability is the distance between the waves at
@@ -110,6 +111,59 @@ and using the fact that \(\vec u_s = \left(\diffp{\zeta}{t}\right)\vec e_z\), th
 asdfasdf
 
 \section{Results and Analysis}
+
+Velocity data was not readily available from the videos of each run, so we
+derived the velocity of each half of the tank using data on the height of the
+interface. We used \href{https://physlets.org/tracker/}{Tracker} to extract the
+motion of key components of the videos. We determined wave number by measuring
+the distance between crests of the visible waves.
+
+Fluid velocity was assumed to be equal and opposite for both sides of the fluid,
+and determined by estimating the fluid flow. We measured the height of the
+interface at both ends of the channel to calculate the volume of each liquid in
+a defined space. To measure the height, we tracked the position of points on the
+interface and the angle of the channel. We then transformed the positions so
+that they were fixed relative to the tank; that is, we observed the positions
+from a reference frame tracking the rotation of the channel.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=5in]{tank-schematic.png}
+    \caption{Schematic of the Tank. Coordinates were rotated by $-\theta$ so that the coordinate axes are parallel and perpendicular to the bottom of the channel.}
+    \label{img:tank-schematic}
+\end{figure}
+Tracking the height
+over time gives us the flow rate of the liquid, which we can divide by the cross
+section of the channel to find the fluid velocity. The velocity varies over
+time, so we chose to average the velocity during the time after the channel was
+tilted, but before the instability started.
+
+Using the density and fluid velocity, we can compute the Richardson number
+
+\[ \text{Ri} = \frac{g}{\rho} \frac{\Delta \rho}{\Delta U} \]
+
+where \(g\) is acceleration due to gravity and \(\rho\) is the density of one fluid, which we set to the density of fresh water (1000 kg/m\textsuperscript{2}) for this analysis.
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+    \textbf{Salinity (\%)} & $\bm{\Delta \rho}$ \textbf{(kg/m\textsuperscript{3})} & $\bm{\Delta U}$ \textbf{(m/s)}& \textbf{Ri} & $\bm{k}$ \textbf{(1/m)}& $\bm{\lambda}$ \textbf{(m)}\\ \hline
+    3.5 & 24.640773 & 0.07 & 48.096414 & 43.744532 & 0.02286 \\ \hline
+    9.5 & 70.584422 & 0.10 & 64.612124 & 56.242970 & 0.01778 \\ \hline
+    15.0 & 112.699310 & 0.12 & 68.929800 & 65.616798 & 0.01524 \\ \hline
+    \end{tabular}
+    \caption{Summary of collected and derived data from the lab.}
+    \label{tab:data}
+\end{table}
+
+In Figure \ref{graph:Ri-vs-k} we plot the relationship between Ri and \(k\).
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=5in]{RivsK.png}
+    \caption{Wave number $k$ as a function of Ri. Admittedly, with three data points, it is hard to identify any kind of dependence.}
+    \label{graph:Ri-vs-k}
+\end{figure}
 
 \section{Future Work}
 
