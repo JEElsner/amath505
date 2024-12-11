@@ -92,6 +92,13 @@ from \cite{kh-instability-demo}:
     \item Swiftly tilt tank to develop the instability.
 \end{enumerate}
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=5in]{filling-with-salt-water-4.jpg}
+    \caption{Carefully returning the tank to level after filling.}
+    \label{img:leveling}
+\end{figure}
+
 The denser fluid was dyed darkly to create a stark visual boundary between the
 two fluids. We placed a light sheet behind the tank to form a uniform background
 and consistently illuminate the fluid. We recorded video of the flow both on a
@@ -103,10 +110,18 @@ rotation of the tank on a bucket placed under one end of the apparatus.
 We used a tank that is 2.834 meters long, 0.1905 meters tall, and 0.054 meters
 wide.
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=5in]{15pct-screenshot.png}
+    \caption{Close up of the waves formed in the trial with 15\% salinity.}
+    \label{img:15pct-waves}
+\end{figure}
+
 \section{Results and Analysis}
 
-We calculated the density of the saltwater using GSW-Python, an implementation of the Thermondynamic Equation of Seawater, assuming that the temperature was \(23^\circ\) C.
-
+We calculated the density of the saltwater using GSW-Python, an implementation
+of the Thermondynamic Equation of Seawater, assuming that the temperature was
+\(23^\circ\) C.
 
 Velocity data was not readily available from the videos of each run, so we
 derived the velocity of each half of the tank using data on the height of the
@@ -131,7 +146,8 @@ Tracking the height over time gives us the flow rate of the liquid, which we can
 divide by the cross section of the channel to find the fluid velocity. The
 velocity varies over time, so we chose to average the velocity during the time
 after the channel was tilted, but before the instability started. We then used
-this data to compute the Richardson Number.
+this data to compute the Richardson Number, assuming that \(\Delta z\) is the
+height of the tank.
 
 \begin{table}[h!]
     \centering
@@ -143,7 +159,7 @@ this data to compute the Richardson Number.
     15.0 & 1.504392 & 0.12 & 0.195297 & 65.616798 & 0.015240 \\
     \hline
     \end{tabular}
-    \caption{Summary of collected and derived data from the lab.}
+    \caption{Summary of collected and derived data from the lab. \(\Delta \rho\) is the difference in density between the fresh water and the salt water. \(\Delta U\) is the difference in velocity between the water in the top and bottom half of the tank.}
     \label{tab:data}
 \end{table}
 
