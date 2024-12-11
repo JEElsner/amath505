@@ -46,7 +46,32 @@ We follow a procedure outlined in \cite{kh-instability-demo} to recreate this
 phenomenon in the lab to analyze the results and determine the relationship
 between fluid speed, fluid density, and instability wavelength. We also analyze
 the evolution of the waves over time.
-% Talk about findings?
+
+
+\section{Theory}
+
+KH instability occurs when the energy from velocity overcomes forces stabilizing
+the stratification between the fluids. Velocity creates a shear force that acts
+on the interface, amplifying small disturbances on the interface. Small
+irregularities in the velocity create pressure differences due to Bernoulli's
+law: high velocities correspond with low pressure, and low velocity creates high
+pressure. These pressure differences amplify the perturbations to create the
+phenomenon. Waves develop because the differing velocities give rise to
+vorticity in the fluid.
+
+We can characterize the likelihood of instability with the Richardson Number,
+which is the ratio of stabilizing forces (in our case, gravity) to shear forces
+due to velocity. From Kundu \cite{kundu}, it is defined as:
+
+\[ \text{Ri} = \frac{N^2}{(dU/dz)^2} \quad\text{with}\quad N^2 = \frac{-g}{\rho_0} \diff{\rho}{z} \]
+
+where \(\rho_0\) is a reference pressure. This formulation accounts for the continuous case where density and velocity change continuously; simplifying and formulating for the discrete case where velocity and density change suddenly across the interface (i.e. \(dU/dz = \Delta U / \Delta z\) and the same for \(\rho\)):
+
+\[ \text{Ri} = \frac{-g}{\rho_0} \frac{\Delta \rho / \Delta z}{(\Delta U / \Delta z)^2} = \frac{-g}{\rho_0} \frac{\Delta \rho \Delta z}{\Delta U}\]
+
+The Richardson number is small when instability is present. In fact, \(\text{Ri}
+< 1/4\) is a necessary condition for instability. In our experiment, we should
+expect to find Richardson Numbers less than this when KH instability occurs.
 
 \section{Procedure}
 
@@ -73,53 +98,6 @@ rotation of the tank on a bucket placed under one end of the apparatus.
 
 We used a tank that is 2.834 meters long, 0.1905 meters tall, and 0.054 meters
 wide.
-
-\section{Theory}
-
-From Kundu \cite{kundu}, we model KH instability as the % FINISH!
-
-Variables
-\begin{itemize}
-    \item \(U_1\): basic state velocity potential of the upper fluid.
-    \item \(U_2 = -U_1\): basic state velocity potential of the lower fluid.
-    \item \(\phi_1, \phi_2\): perturbation velocity potentials due to instability
-    \item \(\tilde \phi_1, \tilde \phi_2\): total flow potentials
-    \item \(\rho_1\): density of the upper fluid
-    \item \(\rho_2 > \rho_1\): density of the lower fluid
-    \item \(z = \zeta(x, t)\): height of the interface between the  fluids
-\end{itemize}
-
-Using Kelvin's circulation theorem, the flow is irrotational in the bulk of the
-top and bottom fluids, hence the velocity potential in each half space must
-satisfy the Laplacian:
-
-\[ \nabla^2 \phi_i = 0\]
-
-For \(i = 1, 2\).
-
-Taking into account the boundary conditions:
-
-\begin{itemize}
-    \item \(\phi_1 = 0\) when \(z = L\)
-    \item \(\phi_2 = 0\) when \(z = -L\)
-    \item \(\vec n \cdot \nabla \tilde \phi_1 = \vec n \cdot \vec u_s = \vec n \cdot \nabla \phi_2\) on \(z = \zeta\)
-    \item \(P_1 = P_2\) on \(z = \zeta\)
-\end{itemize}
-where \(\vec n(x, t)\) is the normal vector to the surface \(xi\), \(\vec u_s(x,
-t)\) is its velocity (which is purely vertical), and \(P_1\) and \(P_2\) are the pressures above and below
-the surface.
-
-We can rewrite the interface boundary condition using unit vectors \(\vec e_x, \vec e_z\):
-
-% good luck deciphering this
-\[ \vec n \cdot \left[ \diffp{\tilde \phi_1}{x} \vec e_x + \diffp{\tilde \phi_1}{z} \vec e_z\right] = \vec n \cdot \left[ \diffp{\zeta}{t} \vec e_z\right] = \vec n \cdot \left[\diffp{\tilde \phi_2}{x} \vec e_x + \diffp{\tilde \phi_2}{z} \vec e_z \right]\]
-
-Defining the normal vector using the implicit formula of a surface (\(f = z - \zeta = 0\)):
-\[\vec n = \frac{z - \zeta(x, t)}{|z - \zeta(x, t)|} = \frac{\left(-\diffp{\zeta}{x}\right)\vec e_x + e_z}{\sqrt{1 + \left(\diffp{\zeta}{x}\right)^2}}\]
-
-and using the fact that \(\vec u_s = \left(\diffp{\zeta}{t}\right)\vec e_z\), the condition simplifies to:
-
-asdfasdf
 
 \section{Results and Analysis}
 
